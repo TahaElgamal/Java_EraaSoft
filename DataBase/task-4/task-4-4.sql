@@ -1,0 +1,21 @@
+CREATE TABLE STUDENTS (
+    name VARCHAR2(50),
+    marks NUMBER
+);
+
+INSERT INTO STUDENTS VALUES ('Ahmed',95);
+INSERT INTO STUDENTS VALUES ('Ali',85);
+INSERT INTO STUDENTS VALUES ('Mohamed',75);
+INSERT INTO STUDENTS VALUES ('Omar',65);
+INSERT INTO STUDENTS VALUES ('Sara',90);
+
+SELECT 
+    name,
+    marks,
+    CASE
+        WHEN marks >= 90 THEN 'A'
+        WHEN (marks >= 80)AND (marks <90) THEN 'B'
+        WHEN (marks >= 70)AND (marks <80) THEN 'C'
+        ELSE 'F'
+    END AS GRADE
+FROM STUDENTS;
