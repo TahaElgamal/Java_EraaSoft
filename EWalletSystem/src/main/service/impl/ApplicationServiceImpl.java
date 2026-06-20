@@ -224,6 +224,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private void showProfile(Account account) {
         Scanner input = new Scanner(System.in);
         System.out.println("------------> Profile <----------");
+        showAccountDetails(account);
 
         int numOfTrying = 0;    // Counts invalid menu choices
         int numOfScanner = 0;    // Counts scanner input errors
