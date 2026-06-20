@@ -11,70 +11,94 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * Implementation of the ApplicationService interface.
+ * This is the main application controller that handles user interaction,
+ * menu navigation, and orchestrates all vehicle registration operations.
+ *
+ * @author Your Name
+ * @version 1.0
+ */
 public class ApplicationServiceImpl implements ApplicationService {
-        // Service for account-related operations (create, read, update, delete)
-        private final RegistrationService service = new RegistrationService();
-        private final Scanner input = new Scanner(System.in);
-        private final AccountServiceImpl accountService = new AccountServiceImpl();
 
-        // Service for input validation (username, password, age, phone number)
-        private final ValidationServiceImpl validationService = new ValidationServiceImpl();
+    /* Service for vehicle registration operations */
+    private final RegistrationService service = new RegistrationService();
 
-        @Override
-        public void startApplication() {
-            System.out.println("**************  Hello Sir :)  *************");
+    /* Scanner for reading user input */
+    private final Scanner input = new Scanner(System.in);
 
-            int numOfTrying = 0;        // Counts invalid menu choices
-            int numOfScanner = 0;        // Counts scanner input errors (e.g., non-integer input)
+    /* Service for account-related operations (create, read, update, delete) */
+    private final AccountServiceImpl accountService = new AccountServiceImpl();
 
-            while (true) {
-                // Display main menu
-                System.out.println("1.Login          2.SignUp         3.Exit");
-                System.out.println("Enter your choice : ");
+    /* Service for input validation (username, password, age, phone number) */
+    private final ValidationServiceImpl validationService = new ValidationServiceImpl();
 
-                Scanner input = new Scanner(System.in);
-                int choice = 0;
-                try {
-                    choice = input.nextInt();
-                } catch (Exception e) {
-                    System.out.println("Please enter a valid choice : ");
-                    numOfScanner++;
-                    continue;   // Skip the rest of the loop and prompt again
-                } finally {
-                    // If too many scanner errors occur, terminate the application
-                    if (numOfScanner == 4) {
-                        System.out.println("Sorry, pls contact with admin......");
-                        break;
-                    }
-                }
+    /**
+     * Starts the main application and displays the initial menu.
+     * Handles user authentication (login/signup) and manages application flow.
+     * Implements security measures including attempt limiting and error handling.
+     */
+    @Override
+    public void startApplication() {
+        System.out.println("**************  Hello Sir :)  *************");
 
-                boolean isExit = false;   // Flag to break out of the main loop
+        int numOfTrying = 0;        /* Counts invalid menu choices */
+        int numOfScanner = 0;       /* Counts scanner input errors (e.g., non-integer input) */
 
-                switch (choice) {
-                    case 1:
-                        logIn();
-                        break;
-                    case 2:
-                        signUp();
-                        break;
-                    case 3:
-                        System.out.println("...... have a nice day :) ......");
-                        isExit = true;
-                        break;
-                    default:
-                        System.out.println("Invalid Choice");
-                        numOfTrying++;    // Count invalid choices
-                }
+        while (true) {
+            /* Display main menu */
+            System.out.println("1.Login          2.SignUp         3.Exit");
+            System.out.println("Enter your choice : ");
 
-                if (isExit) break;
-
-                // If user makes 4 invalid choices, terminate the application
-                if (numOfTrying == 4) {
-                    System.out.println("many times invalid choice pls contact with the admin :( ......");
+            Scanner input = new Scanner(System.in);
+            int choice = 0;
+            try {
+                choice = input.nextInt();
+            } catch (Exception e) {
+                System.out.println("Please enter a valid choice : ");
+                numOfScanner++;
+                continue;   /* Skip the rest of the loop and prompt again */
+            } finally {
+                /* If too many scanner errors occur, terminate the application */
+                if (numOfScanner == 4) {
+                    System.out.println("Sorry, pls contact with admin......");
                     break;
                 }
             }
+
+            boolean isExit = false;   /* Flag to break out of the main loop */
+
+            switch (choice) {
+                case 1:
+                    logIn();
+                    break;
+                case 2:
+                    signUp();
+                    break;
+                case 3:
+                    System.out.println("...... have a nice day :) ......");
+                    isExit = true;
+                    break;
+                default:
+                    System.out.println("Invalid Choice");
+                    numOfTrying++;    /* Count invalid choices */
+            }
+
+            if (isExit) break;
+
+            /* If user makes 4 invalid choices, terminate the application */
+            if (numOfTrying == 4) {
+                System.out.println("many times invalid choice pls contact with the admin :( ......");
+                break;
+            }
         }
+    }
+
+    /**
+     * Handles user login functionality.
+     * Prompts for username and password, validates credentials,
+     * and enters the user profile menu if authentication is successful.
+     */
     private void logIn() {
         Scanner input = new Scanner(System.in);
 
@@ -101,18 +125,23 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         if (Objects.nonNull(accountLogin)) {
             System.out.println("You have successfully logged in :) .....");
-            showProfile(accountLogin);   // Enter user-specific menu
+            showProfile(accountLogin);   /* Enter user-specific menu */
         } else {
             System.out.println("Invalid Username or Password :( ....");
         }
     }
 
+    /**
+     * Handles new user registration.
+     * Collects and validates all required user information.
+     * Creates a new account if all validations pass.
+     */
     private void signUp() {
         Scanner input = new Scanner(System.in);
 
         System.out.println("------------> SignUp <----------");
 
-        // Username input with validation
+        /* Username input with validation */
         String username = null;
         while (true) {
             try {
@@ -130,7 +159,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             }
         }
 
-        // Password input with validation
+        /* Password input with validation */
         String password = null;
         while (true) {
             try {
@@ -148,7 +177,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             }
         }
 
-        // Age input with validation (expects a float)
+        /* Age input with validation (expects a float) */
         float age = 0;
         while (true) {
             try {
@@ -168,7 +197,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             }
         }
 
-        // Phone number input with validation
+        /* Phone number input with validation */
         String phoneNumber = null;
         while (true) {
             try {
@@ -197,13 +226,21 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
     }
 
+    /**
+     * Displays the main vehicle management menu for authenticated users.
+     * Provides access to all vehicle registration operations including:
+     * - Register, search, update, delete vehicles
+     * - List, filter, and view vehicle statistics
+     *
+     * @param account the currently logged-in user account
+     */
     private void showProfile(Account account) {
         Scanner input = new Scanner(System.in);
         System.out.println("------------> Profile <----------");
         showAccountDetails(account);
 
-        int numOfTrying = 0;    // Counts invalid menu choices
-        int numOfScanner = 0;    // Counts scanner input errors
+        int numOfTrying = 0;    /* Counts invalid menu choices */
+        int numOfScanner = 0;   /* Counts scanner input errors */
 
         while (true) {
             System.out.println("\n========================================");
@@ -230,7 +267,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                 numOfScanner++;
                 continue;
             } finally {
-                // If too many scanner errors, terminate the profile session
+                /* If too many scanner errors, terminate the profile session */
                 if (numOfScanner == 3) {
                     System.out.println("Sorry, pls contact with admin......");
                     break;
@@ -280,18 +317,18 @@ public class ApplicationServiceImpl implements ApplicationService {
 
             if (isExit) break;
 
-            // If too many invalid choices, terminate the profile session
+            /* If too many invalid choices, terminate the profile session */
             if (numOfTrying == 4) {
                 System.out.println("many times invalid choice pls contact with the admin :( ......");
                 break;
             }
 
-            // If choice was invalid, skip asking for another service and loop again
+            /* If choice was invalid, skip asking for another service and loop again */
             if (invalidChoice) {
                 continue;
             }
 
-            // Ask if the user wants to perform another operation
+            /* Ask if the user wants to perform another operation */
             System.out.println("Are you need another service .......:)");
             System.out.println("1.Yes       2.No");
             int serviceChoice = input.nextInt();
@@ -301,10 +338,12 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
     }
 
-
-
+    /**
+     * Registers a new vehicle in the system.
+     * Collects all vehicle information with validation for each field.
+     * Creates appropriate vehicle type (Car, Truck, Motorcycle) based on user input.
+     */
     private void registerNewVehicle() {
-
         String plate;
         while (true) {
             System.out.print("Enter plate number: ");
@@ -312,96 +351,94 @@ public class ApplicationServiceImpl implements ApplicationService {
 
             try {
                 InputValidator.validatePlateNumber(plate);
-                break; // valid input
+                break; /* valid input */
             } catch (InvalidInputException e) {
                 System.out.println("Invalid input, please try again.");
             }
         }
 
-
         String owner;
-        while (true){
-        System.out.print("Enter owner name: ");
-        owner = input.nextLine();
-        try{
-            InputValidator.validateOwnerName(owner);
-            break;
-        }catch (InvalidInputException e){
-            System.out.println("Invalid input, please try again.");
-        }}
+        while (true) {
+            System.out.print("Enter owner name: ");
+            owner = input.nextLine();
+            try {
+                InputValidator.validateOwnerName(owner);
+                break;
+            } catch (InvalidInputException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+        }
 
         String type;
-        while (true){
-        System.out.print("Enter vehicle type (Car/Truck/Motorcycle): ");
-        type = input.nextLine();
-        try {
-            InputValidator.validateVehicleType(type);
-            break;
-        }catch (InvalidInputException e){
-            System.out.println("Invalid input, please try again.");
-        }}
+        while (true) {
+            System.out.print("Enter vehicle type (Car/Truck/Motorcycle): ");
+            type = input.nextLine();
+            try {
+                InputValidator.validateVehicleType(type);
+                break;
+            } catch (InvalidInputException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+        }
 
         int year;
-        while (true){
-        System.out.print("Enter registration year: ");
-        year = input.nextInt();
-        input.nextLine();
-        try {
-            InputValidator.validateRegistrationYear(year);
-            break;
-        }catch (InvalidInputException e){
-            System.out.println("Invalid input, please try again.");
-        }}
+        while (true) {
+            System.out.print("Enter registration year: ");
+            year = input.nextInt();
+            input.nextLine();
+            try {
+                InputValidator.validateRegistrationYear(year);
+                break;
+            } catch (InvalidInputException e) {
+                System.out.println("Invalid input, please try again.");
+            }
+        }
+
         Vehicle vehicle = null;
 
         if (type.equalsIgnoreCase("Car")) {
-
             int doors;
             while (true) {
                 System.out.print("Enter number of doors: ");
                 doors = input.nextInt();
                 input.nextLine();
-                try{
+                try {
                     InputValidator.validateDoors(doors);
                     break;
-                } catch (InvalidInputException e){
+                } catch (InvalidInputException e) {
                     System.out.println("Invalid input, please try again.");
                 }
             }
             vehicle = new Car(plate, owner, year, "ACTIVE", doors);
 
         } else if (type.equalsIgnoreCase("Truck")) {
-
             double cargo;
-            while(true){
+            while (true) {
                 System.out.print("Enter cargo capacity tons: ");
                 cargo = input.nextDouble();
                 input.nextLine();
-                try{
+                try {
                     InputValidator.validateCargoCapacity(cargo);
                     break;
-                }catch (InvalidInputException e){
+                } catch (InvalidInputException e) {
                     System.out.println("Invalid input, please try again.");
                 }
             }
-
             vehicle = new Truck(plate, owner, year, "ACTIVE", cargo);
 
         } else if (type.equalsIgnoreCase("Motorcycle")) {
-
             String engine;
-            while (true){
+            while (true) {
                 System.out.print("Enter engine type: ");
                 engine = input.nextLine();
 
                 try {
                     InputValidator.validateEngineType(engine);
                     break;
-                }catch (InvalidInputException e){
+                } catch (InvalidInputException e) {
                     System.out.println("Invalid input, please try again.");
                 }
             }
-
             vehicle = new Motorcycle(plate, owner, year, "ACTIVE", engine);
         }
 
@@ -411,8 +448,12 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
     }
 
+    /**
+     * Searches for a vehicle by its plate number.
+     * Validates the plate number format before searching.
+     * Displays vehicle details if found.
+     */
     private void searchVehicleByPlate() {
-
         String plate;
 
         while (true) {
@@ -429,15 +470,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         Vehicle vehicle = service.findByPlate(plate);
         System.out.println(vehicle);
-
     }
 
+    /**
+     * Updates the owner name of an existing vehicle.
+     * Validates both plate number and new owner name before updating.
+     */
     private void updateOwnerName() {
-
         String plate;
         String owner;
 
-        // plate validation
+        /* plate validation */
         while (true) {
             System.out.print("Enter plate number: ");
             plate = input.nextLine();
@@ -450,7 +493,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             }
         }
 
-        // owner validation
+        /* owner validation */
         while (true) {
             System.out.print("Enter new owner name: ");
             owner = input.nextLine();
@@ -464,12 +507,14 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
         service.updateOwner(plate, owner);
-
         System.out.println("Owner updated successfully.");
     }
 
+    /**
+     * Deletes a vehicle from the system.
+     * Validates plate number and checks if vehicle exists before deletion.
+     */
     private void deleteVehicle() {
-
         String plate;
 
         while (true) {
@@ -483,20 +528,23 @@ public class ApplicationServiceImpl implements ApplicationService {
                 System.out.println(e.getMessage());
             }
         }
-        try{
-        Vehicle vehicle  = service.findByPlate(plate);
+        try {
+            Vehicle vehicle = service.findByPlate(plate);
 
-        if (Objects.nonNull(vehicle)){
-            service.deleteVehicle(plate);
-            System.out.println("Vehicle deleted successfully.");
-        }}catch (VehicleNotFoundException e){
+            if (Objects.nonNull(vehicle)) {
+                service.deleteVehicle(plate);
+                System.out.println("Vehicle deleted successfully.");
+            }
+        } catch (VehicleNotFoundException e) {
             System.out.println(e.getMessage());
         }
-
     }
 
+    /**
+     * Lists all registered vehicles in the system.
+     * Displays a message if no vehicles are registered.
+     */
     private void listAllVehicles() {
-
         List<Vehicle> vehicles = service.getAllVehicles();
 
         if (vehicles.isEmpty()) {
@@ -507,8 +555,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         vehicles.forEach(System.out::println);
     }
 
+    /**
+     * Filters and displays vehicles by their type.
+     * Validates the vehicle type before filtering.
+     */
     private void filterByVehicleType() {
-
         String type;
 
         while (true) {
@@ -527,32 +578,51 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .forEach(System.out::println);
     }
 
+    /**
+     * Displays all vehicles owned by a specific owner.
+     * Validates the owner name before searching.
+     */
     private void showOwnerHistory() {
         String owner;
         while (true) {
             System.out.print("Enter owner name: ");
             owner = input.nextLine();
-            try{
+            try {
                 InputValidator.validateOwnerName(owner);
                 break;
-            }catch (InvalidInputException e){
+            } catch (InvalidInputException e) {
                 System.out.println("Invalid input, please try again.");
             }
         }
         service.getVehiclesByOwner(owner)
                 .forEach(System.out::println);
     }
-    private void showExpiredRegistrations() {
 
+    /**
+     * Displays vehicles with expired registrations.
+     * A registration is expired if the vehicle hasn't been registered in over 5 years.
+     */
+    private void showExpiredRegistrations() {
         int currentYear = java.time.Year.now().getValue();
 
         service.getExpiredRegistrations(currentYear)
                 .forEach(System.out::println);
     }
+
+    /**
+     * Displays comprehensive statistics about all registered vehicles.
+     * Shows total count, year distribution, type distribution, and status breakdown.
+     */
     private void statisticsReport() {
         service.printStatistics();
     }
 
+    /**
+     * Displays the details of a user account.
+     * Shows username, password, age, and phone number.
+     *
+     * @param account the account whose details to display
+     */
     private void showAccountDetails(Account account) {
         System.out.println("*User Details (worker) <----------");
         Account accountDetails = accountService.showAccountDetails(account);
@@ -561,6 +631,4 @@ public class ApplicationServiceImpl implements ApplicationService {
         System.out.println("Age: " + accountDetails.getAge());
         System.out.println("Phone Number: " + accountDetails.getPhoneNumber());
     }
-
-
 }
